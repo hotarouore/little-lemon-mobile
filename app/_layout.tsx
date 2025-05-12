@@ -2,7 +2,8 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Platform, SafeAreaView, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-reanimated';
 import { useEffect } from 'react';
 
@@ -78,16 +79,18 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <CartProvider>
-        <UserProvider>
-          <SafeAreaView style={styles.container}>
-            <StackNavigator />
-            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-          </SafeAreaView>
-        </UserProvider>
-      </CartProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <CartProvider>
+          <UserProvider>
+            <View style={styles.container}>
+              <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+              <StackNavigator />
+            </View>
+          </UserProvider>
+        </CartProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 

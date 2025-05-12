@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useCart } from '../../context/CartContext';
 
 function CartIconWithBadge({ color, size }: { color: string; size: number }) {
@@ -21,60 +22,51 @@ function CartIconWithBadge({ color, size }: { color: string; size: number }) {
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap = 'home';
+    <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+      <Tabs
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName: keyof typeof Ionicons.glyphMap = 'home';
 
-          if (route.name === 'index') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'menu') {
-            iconName = focused ? 'restaurant' : 'restaurant-outline';
-          } else if (route.name === 'my-reservations') {
-            iconName = focused ? 'calendar' : 'calendar-outline';
-          } else if (route.name === 'order') {
-            return <CartIconWithBadge color={color} size={size} />;
-          } else if (route.name === 'profile') {
-            iconName = focused ? 'person' : 'person-outline';
-          }
+            if (route.name === 'index') {
+              iconName = focused ? 'home' : 'home-outline';
+            } else if (route.name === 'menu') {
+              iconName = focused ? 'restaurant' : 'restaurant-outline';
+            } else if (route.name === 'my-reservations') {
+              iconName = focused ? 'calendar' : 'calendar-outline';
+            } else if (route.name === 'order') {
+              return <CartIconWithBadge color={color} size={size} />;
+            } else if (route.name === 'profile') {
+              iconName = focused ? 'person' : 'person-outline';
+            }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: '#495E57',
-        tabBarInactiveTintColor: 'gray',
-      })}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-        }}
-      />
-      <Tabs.Screen
-        name="menu"
-        options={{
-          title: 'Menu',
-        }}
-      />
-      <Tabs.Screen
-        name="my-reservations"
-        options={{
-          title: 'Reservations',
-        }}
-      />
-      <Tabs.Screen
-        name="order"
-        options={{
-          title: 'Order',
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-        }}
-      />
-    </Tabs>
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: '#495E57',
+          tabBarInactiveTintColor: 'gray',
+          headerStyle: {
+            height: Platform.OS === 'ios' ? 60 : 60,
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 24,
+            color: '#495E57',
+          },
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          headerBackgroundContainerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerShown: false,
+        })}
+      >
+        <Tabs.Screen name="index" />
+        <Tabs.Screen name="menu" />
+        <Tabs.Screen name="my-reservations" />
+        <Tabs.Screen name="order" />
+        <Tabs.Screen name="profile" />
+      </Tabs>
+    </SafeAreaView>
   );
 }
 
