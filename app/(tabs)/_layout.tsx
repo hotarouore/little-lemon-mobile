@@ -30,10 +30,12 @@ export default function TabLayout() {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'menu') {
             iconName = focused ? 'restaurant' : 'restaurant-outline';
-          } else if (route.name === 'book') {
+          } else if (route.name === 'my-reservations') {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === 'order') {
             return <CartIconWithBadge color={color} size={size} />;
+          } else if (route.name === 'profile') {
+            iconName = focused ? 'person' : 'person-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -55,15 +57,21 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="book"
+        name="my-reservations"
         options={{
-          title: 'Book',
+          title: 'Reservations',
         }}
       />
       <Tabs.Screen
         name="order"
         options={{
           title: 'Order',
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
         }}
       />
     </Tabs>

@@ -2,12 +2,16 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { generateUUID } from '../utils/uuid';
 
 // Mock available times - in a real app, this would come from an API
 const availableTimes = [
   '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
   '20:00', '20:30', '21:00', '21:30', '22:00'
 ];
+
+const BOOKINGS_KEY = 'bookings';
 
 export default function BookingScreen() {
   const [formData, setFormData] = useState({
@@ -46,11 +50,38 @@ export default function BookingScreen() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      // Here you would typically handle the form submission
-      // For now, we'll just navigate to the confirmation screen
-      router.push('../confirmed-booking');
+      try {
+        // Create a new booking object
+        const newBooking = {
+          id: generateUUID(),
+          date: formData.date.toISOString(),
+          time: formData.time,
+          guests: formData.guests,
+          occasion: formData.occasion || 'Regular Dining',
+          status: 'confirmed',
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+        };
+
+        // Get existing bookings
+        const existingBookingsJSON = await AsyncStorage.getItem(BOOKINGS_KEY);
+        const existingBookings = existingBookingsJSON ? JSON.parse(existingBookingsJSON) : [];
+
+        // Add new booking
+        const updatedBookings = [...existingBookings, newBooking];
+        
+        // Save updated bookings
+        await AsyncStorage.setItem(BOOKINGS_KEY, JSON.stringify(updatedBookings));
+
+        // Navigate to confirmation screen
+        router.push('/confirmed-booking');
+      } catch (error) {
+        console.error('Error saving reservation:', error);
+        // Could add error handling here
+      }
     }
   };
 
@@ -250,7 +281,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   iosPicker: {
-    height: 200,
-    marginTop: 10,
+    width: '100%',
   },
 }); 

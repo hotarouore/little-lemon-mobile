@@ -11,9 +11,9 @@ export default function ConfirmedBookingScreen() {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.push('/(tabs)')}
+          onPress={() => router.push('/(tabs)/my-reservations')}
         >
-          <Text style={styles.buttonText}>Return to Home</Text>
+          <Text style={styles.buttonText}>View My Reservations</Text>
         </TouchableOpacity>
       </View>
     </View>
